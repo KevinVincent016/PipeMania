@@ -1,0 +1,3 @@
+public enum TypeTube {
+    TYPEHORIZONTAL, TYPEVERTICAL, TYPENINETY, NONE
+}
