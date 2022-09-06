@@ -11,7 +11,7 @@ public class Main {
 
 	//Methods
 	public static void displayMenu(){
-
+		System.out.println("");
 	}
 
 	public static void createMatch(){
