@@ -16,6 +16,7 @@ public class Player {
 
     //Getter and Setter
     public String getName() {
+
         return name;
     }
 
@@ -41,6 +42,13 @@ public class Player {
 
     public Player getRight() {
         return right;
+    }
+
+    public String toString() {
+        return "Player{" +
+                "name='" + name + '\'' +
+                ", score=" + score +
+                '}';
     }
 
     public void setRight(Player right) {
