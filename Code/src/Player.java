@@ -1,4 +1,4 @@
-public class Player {
+public class Player{
 
     //Atributes
     private String name;

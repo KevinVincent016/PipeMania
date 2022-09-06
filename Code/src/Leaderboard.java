@@ -46,19 +46,24 @@ public class Leaderboard {
         }
     }
 
+    int count = 0;
     public void top10(){
-        top10(root, 0);
+        top10(root);
     }
 
-    private void top10(Player current, int n){
+    private void top10(Player current){
         if(current==null){
             return;
         }
-
-        if(n<10) {
-            top10(current.getRight(),n);
-            System.out.println(current.toString());
-            top10(current.getLeft(),n++);
+        if(count==10){
+            count=0;
+            return;
         }
+
+        top10(current.getRight());
+        System.out.println(current.toString());
+        count++;
+        top10(current.getLeft());
+
     }
 }
