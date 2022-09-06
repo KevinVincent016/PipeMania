@@ -9,8 +9,9 @@ public class Box {
     private Box prev;
 
     //Constructor
-    public Box(int id){
+    public Box(int id, TypeTube tubeType){
         this.id = id;
+        this.tubeType = tubeType;
     }
 
     //Getter and Setter
@@ -44,6 +45,26 @@ public class Box {
 
     public void setPrev(Box prev) {
         this.prev = prev;
+    }
+
+    public String toString(){
+        if(tubeType==TypeTube.TYPEHORIZONTAL){
+            return "[ == ]";
+        }
+        if(tubeType==TypeTube.TYPEVERTICAL){
+            return  "[ || ]";
+        }
+        if(tubeType==TypeTube.TYPENINETY){
+            return "[  O ]";
+        }
+        if(tubeType==TypeTube.F){
+            return "[  F ]";
+        }
+        if(tubeType==TypeTube.D){
+            return "[  D ]";
+        }else{
+            return "[  X ]";
+        }
     }
 
 }

@@ -18,15 +18,53 @@ public class Main {
 
 				case 1:
 					System.out.println("Inicia la partida");
-					int option = createMatch();
-					if(option==1){
-						theBoard.putTube();
-					}
-					if(option==2){
-						theBoard.verifyTubes();
-					}
-					if(option==3){
-						start = false;
+
+					//Set board
+					theBoard.createBoard(64);
+
+					//Menu 2
+					boolean inGame = true;
+					while(inGame) {
+
+						int option;
+						theBoard.printBoard();
+						System.out.println("\n" +
+								"(1) Poner tuberia" + "\n" +
+								"(2) Simular" + "\n" +
+								"(3) Salir");
+						option = sc.nextInt();
+
+						if (option == 1) {
+							System.out.println("Indica la columna");
+							int colum = sc.nextInt();
+							System.out.println("Indica la fila");
+							int row = sc.nextInt();
+							System.out.println("Indica el tipo de tuberia");
+							System.out.println("(1) Tuberia horizontal (==)");
+							System.out.println("(2) Tuberia vertical (||)");
+							System.out.println("(3) Tuberia 90 Grados (O)");
+							int aux = sc.nextInt();
+							TypeTube typeTube = null;
+							if(aux == 1){
+								typeTube = TypeTube.TYPEHORIZONTAL;
+							}
+							if(aux == 2){
+								typeTube = TypeTube.TYPEVERTICAL;
+							}
+							if(aux == 3){
+								typeTube = TypeTube.TYPENINETY;
+							}
+							int coordinate = (colum*8)+row;
+							theBoard.putTube(coordinate,typeTube);
+						}
+						if (option == 2) {
+							theBoard.verifyTubes();
+						}
+						if (option == 3) {
+							inGame = false;
+							theBoard.setHead(null);
+							theBoard.setTail(null);
+						}
 					}
 					break;
 
@@ -53,20 +91,6 @@ public class Main {
 				"(3) Salir");
 		option = sc.nextInt();
 		return option;
-	}
-
-	public static int displayMenu2(){
-		int option;
-		System.out.println("(1) Poner tuberia" + "\n" +
-				"(2) Simular" + "\n" +
-				"(3) Salir");
-		option = sc.nextInt();
-		return option;
-	}
-
-	public static int createMatch(){
-		theBoard.createBoard(64);
-		return displayMenu2();
 	}
 
 	public static void verifyTubes(){
