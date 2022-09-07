@@ -1,9 +1,10 @@
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
 
 	//Objects
 	static Scanner sc = new Scanner(System.in);
+	static Random r = new Random();
 
 	static Board theBoard = new Board();
 
@@ -21,6 +22,10 @@ public class Main {
 
 					//Set board
 					theBoard.createBoard(64);
+
+					//Set points
+					theBoard.putTube((int)(Math.random()*63+1), TypeTube.F);
+					theBoard.putTube((int)(Math.random()*63+1), TypeTube.D);
 
 					//Menu 2
 					boolean inGame = true;

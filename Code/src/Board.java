@@ -66,9 +66,6 @@ public class Board {
     }
 
     public void createBoard(int boxes) {
-
-
-
         createBoard(boxes, 1);
     }
 
@@ -145,6 +142,14 @@ public class Board {
             System.out.println("Posicion no valida");
         }
 
+        if(tubeType == TypeTube.F){
+            current.setTubeType(TypeTube.F);
+        }
+
+        if(tubeType == TypeTube.D){
+            current.setTubeType(TypeTube.D);
+        }
+
         if (tubeType == TypeTube.TYPEHORIZONTAL) {
             if (current.getPrev().getTubeType() == TypeTube.NONE && current.getNext().getTubeType() == TypeTube.NONE) {
                 System.out.println("Posicion no valida, la tuberia no se conecta a ningun lugar");
@@ -152,6 +157,7 @@ public class Board {
             if (current.getPrev().getTubeType() == TypeTube.TYPEVERTICAL || current.getNext().getTubeType() == TypeTube.TYPEVERTICAL) {
                 System.out.println("Posicion no valida, no se puede conectar directamente a una tuberia vertical");
             } else {
+                current.setTubeType(TypeTube.TYPEHORIZONTAL);
                 current.getPrev().setNext(current);
                 current.getNext().setPrev(current);
                 contTubes++;
@@ -164,6 +170,7 @@ public class Board {
             if (current.getPrev().getTubeType() != TypeTube.NONE || current.getNext().getTubeType() != TypeTube.NONE) {
                 System.out.println("Posicion no valida, la tuberia vertical no puede estar conectada lateralmente a ninguna otra tuberia");
             } else {
+                current.setTubeType(TypeTube.TYPEVERTICAL);
                 current.setPrev(downBox);
                 current.setNext(upBox);
                 downBox.setNext(current);
@@ -185,9 +192,11 @@ public class Board {
                 System.out.println("Posicion no valida, la tuberia 90 grados no puede unirse arriba o abajo de una tuberia horizontal");
             }else{
                 if(current.getPrev().getTubeType()!=TypeTube.NONE){
+                    current.setTubeType(TypeTube.TYPENINETY);
                     current.setPrev(current.getPrev());
                     current.setNext(upBox);
                 }else{
+                    current.setTubeType(TypeTube.TYPENINETY);
                     current.setNext(current.getNext());
                     current.setPrev(upBox);
                 }
