@@ -8,6 +8,10 @@ public class Board {
     //Atributes
     private int contTubes;
 
+    private Box board[][] = new Box[8][8];
+
+    private int contErrores = 0;
+
     //constructor
     public Board() {
         contTubes = 0;
@@ -46,13 +50,21 @@ public class Board {
         return contTubes;
     }
 
+    public void setContErrores(int contErrores) {
+        this.contErrores = contErrores;
+    }
+
+    public int getContErrores() {
+        return contErrores;
+    }
+
     //Methods
     private void addLast(Box box) {
-        if(head==null){
+        if (head == null) {
             head = box;
             head.setNext(box);
             head.setPrev(box);
-        }else{
+        } else {
             Box tail = head.getPrev();
 
             //Enlaces next
@@ -65,146 +77,235 @@ public class Board {
         }
     }
 
-    public void createBoard(int boxes) {
-        createBoard(boxes, 1);
-    }
-
-    private void createBoard(int boxes, int id) {
-
-        if (id > boxes) {
-            return;
+    public void createBoard() {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board.length; j++) {
+                board[i][j] = new Box(i, j, TypeTube.NONE);
+            }
         }
-
-        addLast(new Box(id, TypeTube.NONE));
-        createBoard(boxes, id + 1);
     }
 
-    public Box search(int goal) {
-        return search(goal, head);
+    public Box search(int row, int colum) {
+        return search(row, colum, head);
     }
 
-    private Box search(int goal, Box current) {
+    private Box search(int row, int colum, Box current) {
 
         if (current == null) {
             return null;
         }
 
-        if (current.getId() == goal) {
+        if (current.getRow() == row && current.getColum() == colum) {
             return current;
         }
 
-        return search(goal, current.getNext());
+        return search(row, colum, current.getNext());
     }
 
     public void printBoard() {
-        if (head == null) {
-            System.out.println("Tablero no creado");
-        } else {
-            Box aux = head;
-            int cont = 0;
-            while (aux != null) {
-                System.out.print(aux.toString());
-                aux = aux.getNext();
-                cont++;
-                switch (cont) {
-                    case 8:
-                        System.out.print("\n");
-                        break;
-                    case 16:
-                        System.out.print("\n");
-                        break;
-                    case 24:
-                        System.out.print("\n");
-                        break;
-                    case 32:
-                        System.out.print("\n");
-                        break;
-                    case 40:
-                        System.out.print("\n");
-                        break;
-                    case 48:
-                        System.out.print("\n");
-                        break;
-                    case 56:
-                        System.out.print("\n");
-                        break;
-                    case 64:
-                        aux = null;
-                        break;
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board.length; j++) {
+                System.out.print(board[i][j].toString());
+                if (board[i][j].getRow() == 0 && board[i][j].getColum() == 7) {
+                    System.out.print("\n");
+                }
+                if (board[i][j].getRow() == 1 && board[i][j].getColum() == 7) {
+                    System.out.print("\n");
+                }
+                if (board[i][j].getRow() == 2 && board[i][j].getColum() == 7) {
+                    System.out.print("\n");
+                }
+                if (board[i][j].getRow() == 3 && board[i][j].getColum() == 7) {
+                    System.out.print("\n");
+                }
+                if (board[i][j].getRow() == 4 && board[i][j].getColum() == 7) {
+                    System.out.print("\n");
+                }
+                if (board[i][j].getRow() == 5 && board[i][j].getColum() == 7) {
+                    System.out.print("\n");
+                }
+                if (board[i][j].getRow() == 6 && board[i][j].getColum() == 7) {
+                    System.out.print("\n");
+                }
+                if (board[i][j].getRow() == 7 && board[i][j].getColum() == 7) {
+                    System.out.print("\n");
                 }
             }
         }
     }
 
-    public void putTube(int coordinate, TypeTube tubeType) {
-        Box current = search(coordinate);
-        if (current.getTubeType() == TypeTube.F || current.getTubeType() == TypeTube.D) {
-            System.out.println("Posicion no valida");
+    public void putTube(int row, int colum, TypeTube tubeType) {
+        //Set Fuente and Drenaje
+        if (tubeType == TypeTube.F) {
+            board[row][colum].setTubeType(tubeType);
+            addLast(new Box(row, colum, tubeType));
+        }
+        if (tubeType == TypeTube.D) {
+            board[row][colum].setTubeType(tubeType);
         }
 
-        if(tubeType == TypeTube.F){
-            current.setTubeType(TypeTube.F);
+        //avoid replacement of F and D
+        if ((tubeType != TypeTube.F && tubeType != TypeTube.D) && (board[row][colum].getTubeType() == TypeTube.F || board[row][colum].getTubeType() == TypeTube.D)) {
+            System.out.println("Movimiento ilegal, no se puede reemplazar la Fuente o el Drenaje");
+            return;
         }
 
-        if(tubeType == TypeTube.D){
-            current.setTubeType(TypeTube.D);
-        }
-
+        //Set tubes
         if (tubeType == TypeTube.TYPEHORIZONTAL) {
-            if (current.getPrev().getTubeType() == TypeTube.NONE && current.getNext().getTubeType() == TypeTube.NONE) {
-                System.out.println("Posicion no valida, la tuberia no se conecta a ningun lugar");
-            }
-            if (current.getPrev().getTubeType() == TypeTube.TYPEVERTICAL || current.getNext().getTubeType() == TypeTube.TYPEVERTICAL) {
-                System.out.println("Posicion no valida, no se puede conectar directamente a una tuberia vertical");
+            if (colum == 0) {
+                if (board[row][colum + 1].getTubeType() == TypeTube.TYPEVERTICAL) {
+                    contErrores++;
+                }
+                if (board[row][colum + 1].getTubeType() == TypeTube.TYPENINETY && board[row][colum + 2].getTubeType() != TypeTube.NONE) {
+                    contErrores++;
+                }
+            } else if (colum == 7) {
+                if (board[row][colum - 1].getTubeType() == TypeTube.TYPEVERTICAL) {
+                    contErrores++;
+                }
+                if (board[row][colum - 1].getTubeType() == TypeTube.TYPENINETY && board[row][colum - 2].getTubeType() != TypeTube.NONE) {
+                    contErrores++;
+                }
             } else {
-                current.setTubeType(TypeTube.TYPEHORIZONTAL);
-                current.getPrev().setNext(current);
-                current.getNext().setPrev(current);
-                contTubes++;
+                if (board[row][colum - 1].getTubeType() == TypeTube.TYPEVERTICAL || board[row][colum + 1].getTubeType() == TypeTube.TYPEVERTICAL) {
+                    contErrores++;
+                }
             }
+
+            if (row == 0) {
+                if (board[row + 1][colum].getTubeType() != TypeTube.NONE) {
+                    contErrores++;
+                }
+            }
+            if (row == 7) {
+                if (board[row - 1][colum].getTubeType() != TypeTube.NONE) {
+                    contErrores++;
+                }
+            } else {
+                if (board[row + 1][colum].getTubeType() != TypeTube.NONE || board[row - 1][colum].getTubeType() != TypeTube.NONE) {
+                    contErrores++;
+                }
+            }
+
+            board[row][colum].setTubeType(tubeType);
+            addLast(new Box(row, colum, tubeType));
         }
 
         if (tubeType == TypeTube.TYPEVERTICAL) {
-            Box upBox = search(current.getId() - 8);
-            Box downBox = search(current.getId() + 8);
-            if (current.getPrev().getTubeType() != TypeTube.NONE || current.getNext().getTubeType() != TypeTube.NONE) {
-                System.out.println("Posicion no valida, la tuberia vertical no puede estar conectada lateralmente a ninguna otra tuberia");
+            if (colum == 0) {
+                if (board[row][colum + 1].getTubeType() != TypeTube.NONE) {
+                    contErrores++;
+                }
+            } else if (colum == 7) {
+                if (board[row][colum - 1].getTubeType() != TypeTube.NONE) {
+                    contErrores++;
+                }
             } else {
-                current.setTubeType(TypeTube.TYPEVERTICAL);
-                current.setPrev(downBox);
-                current.setNext(upBox);
-                downBox.setNext(current);
-                upBox.setPrev(current);
-                contTubes++;
+                if (board[row][colum - 1].getTubeType() != TypeTube.NONE || board[row][colum + 1].getTubeType() != TypeTube.NONE) {
+                    contErrores++;
+                }
             }
+
+            if (row == 0) {
+                if (board[row + 1][colum].getTubeType() == TypeTube.TYPEHORIZONTAL) {
+                    contErrores++;
+                }
+                if (board[row + 1][colum].getTubeType() == TypeTube.TYPENINETY && board[row + 2][colum].getTubeType() != TypeTube.NONE) {
+                    contErrores++;
+                }
+            } else if (row == 7) {
+                if (board[row - 1][colum].getTubeType() == TypeTube.TYPEHORIZONTAL) {
+                    contErrores++;
+                }
+                if (board[row - 1][colum].getTubeType() == TypeTube.TYPENINETY && board[row - 2][colum].getTubeType() != TypeTube.NONE) {
+                    contErrores++;
+                }
+            } else {
+                if (board[row - 1][colum].getTubeType() == TypeTube.TYPEHORIZONTAL || board[row + 1][colum].getTubeType() == TypeTube.TYPEHORIZONTAL) {
+                    contErrores++;
+                }
+            }
+
+            board[row][colum].setTubeType(tubeType);
+            addLast(new Box(row, colum, tubeType));
         }
 
         if (tubeType == TypeTube.TYPENINETY) {
-            Box upBox = search(current.getId() - 8);
-            Box downBox = search(current.getId() + 8);
-            if (current.getPrev().getTubeType() == TypeTube.NONE && current.getNext().getTubeType() == TypeTube.NONE && upBox.getTubeType() == TypeTube.NONE && downBox.getTubeType() == TypeTube.NONE) {
-                System.out.println("Posicion no valida, la tuberia no se conecta a ningun lugar");
-            }
-            if (current.getPrev().getTubeType() == TypeTube.TYPEVERTICAL || current.getNext().getTubeType() == TypeTube.TYPEVERTICAL) {
-                System.out.println("Posicion no valida, la tuberia 90 grados no puede unirse por izquierda o derecha a una tuberia vertical");
-            }
-            if(upBox.getTubeType()==TypeTube.TYPEHORIZONTAL || downBox.getTubeType()==TypeTube.TYPEHORIZONTAL){
-                System.out.println("Posicion no valida, la tuberia 90 grados no puede unirse arriba o abajo de una tuberia horizontal");
-            }else{
-                if(current.getPrev().getTubeType()!=TypeTube.NONE){
-                    current.setTubeType(TypeTube.TYPENINETY);
-                    current.setPrev(current.getPrev());
-                    current.setNext(upBox);
-                }else{
-                    current.setTubeType(TypeTube.TYPENINETY);
-                    current.setNext(current.getNext());
-                    current.setPrev(upBox);
+            if (colum == 0) {
+                if (board[row][colum + 1].getTubeType() == TypeTube.F || board[row][colum + 1].getTubeType() == TypeTube.D) {
+                    contErrores++;
+                }
+            } else if (colum == 7) {
+                if (board[row][colum - 1].getTubeType() == TypeTube.F || board[row][colum - 1].getTubeType() == TypeTube.D) {
+                    contErrores++;
+                }
+            } else {
+                if (board[row][colum + 1].getTubeType() == TypeTube.F || board[row][colum + 1].getTubeType() == TypeTube.D) {
+                    contErrores++;
+                }
+                if (board[row][colum - 1].getTubeType() == TypeTube.F || board[row][colum - 1].getTubeType() == TypeTube.D) {
+                    contErrores++;
                 }
             }
+            if (row == 0) {
+                if (board[row + 1][colum].getTubeType() == TypeTube.F || board[row + 1][colum].getTubeType() == TypeTube.D) {
+                    contErrores++;
+                }
+            } else if (row == 7) {
+                if (board[row - 1][colum].getTubeType() == TypeTube.F || board[row - 1][colum].getTubeType() == TypeTube.D) {
+                    contErrores++;
+                }
+            } else {
+                if (board[row + 1][colum].getTubeType() == TypeTube.F || board[row + 1][colum].getTubeType() == TypeTube.D) {
+                    contErrores++;
+                }
+                if (board[row - 1][colum].getTubeType() == TypeTube.F || board[row - 1][colum].getTubeType() == TypeTube.D) {
+                    contErrores++;
+                }
+            }
+
+            board[row][colum].setTubeType(tubeType);
+            addLast(new Box(row, colum, tubeType));
         }
     }
 
-    public void verifyTubes() {
+    public boolean auxVeifyTubes() {
+        return auxVerifyTubes(head);
+    }
 
+    private boolean auxVerifyTubes(Box current) {
+        if (current == tail) {
+            return true;
+        }
+        if (current.getTubeType() != TypeTube.NONE) {
+            return false;
+        }
+        return auxVerifyTubes(current.getNext());
+    }
+
+    public boolean verifyTubes(int lastRow, int lastColum, TypeTube lastTypeTube) {
+        if (lastTypeTube == TypeTube.TYPEHORIZONTAL) {
+            if (board[lastRow][lastColum + 1].getTubeType() == TypeTube.D || board[lastRow][lastColum + 1].getTubeType() == TypeTube.NONE) {
+                addLast(board[lastRow][lastColum + 1]);
+            }
+            if (board[lastRow][lastColum - 1].getTubeType() == TypeTube.D || board[lastRow][lastColum - 1].getTubeType() == TypeTube.NONE){
+                addLast(board[lastRow][lastColum - 1]);
+            }
+        }
+
+        if (lastTypeTube == TypeTube.TYPEVERTICAL) {
+            if (board[lastRow + 1][lastColum].getTubeType() == TypeTube.D || board[lastRow + 1][lastColum].getTubeType() == TypeTube.NONE) {
+                addLast(board[lastRow][lastColum + 1]);
+            }
+            if(board[lastRow - 1][lastColum].getTubeType() == TypeTube.D || board[lastRow - 1][lastColum].getTubeType() == TypeTube.NONE){
+                addLast(board[lastRow][lastColum - 1]);
+            }
+        }
+
+        if (!auxVeifyTubes() || contErrores > 0) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

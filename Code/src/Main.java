@@ -21,14 +21,17 @@ public class Main {
 					System.out.println("Inicia la partida");
 
 					//Set board
-					theBoard.createBoard(64);
+					theBoard.createBoard();
 
 					//Set points
-					theBoard.putTube((int)(Math.random()*63+1), TypeTube.F);
-					theBoard.putTube((int)(Math.random()*63+1), TypeTube.D);
+					theBoard.putTube((int)(Math.random()*7+1), (int)(Math.random()*7+1), TypeTube.F);
+					theBoard.putTube((int)(Math.random()*7+1), (int)(Math.random()*7+1), TypeTube.D);
 
 					//Menu 2
 					boolean inGame = true;
+					int row = 0;
+					int colum = 0;
+					TypeTube typeTube = null;
 					while(inGame) {
 
 						int option;
@@ -41,15 +44,14 @@ public class Main {
 
 						if (option == 1) {
 							System.out.println("Indica la columna");
-							int colum = sc.nextInt();
+							colum = sc.nextInt();
 							System.out.println("Indica la fila");
-							int row = sc.nextInt();
+							row = sc.nextInt();
 							System.out.println("Indica el tipo de tuberia");
 							System.out.println("(1) Tuberia horizontal (==)");
 							System.out.println("(2) Tuberia vertical (||)");
 							System.out.println("(3) Tuberia 90 Grados (O)");
 							int aux = sc.nextInt();
-							TypeTube typeTube = null;
 							if(aux == 1){
 								typeTube = TypeTube.TYPEHORIZONTAL;
 							}
@@ -59,11 +61,18 @@ public class Main {
 							if(aux == 3){
 								typeTube = TypeTube.TYPENINETY;
 							}
-							int coordinate = (colum*8)+row;
-							theBoard.putTube(coordinate,typeTube);
+							theBoard.putTube(row, colum,typeTube);
 						}
 						if (option == 2) {
-							theBoard.verifyTubes();
+							boolean validation = theBoard.verifyTubes(row, colum, typeTube);
+							if (validation){
+								System.out.println("La solucion es correcta");
+								theBoard.setHead(null);
+								theBoard.setTail(null);
+								inGame = false;
+							}else{
+								System.out.println("La tuberia no funciona, numero de errores " + theBoard.getContErrores());
+							}
 						}
 						if (option == 3) {
 							inGame = false;

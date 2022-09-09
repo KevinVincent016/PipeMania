@@ -1,7 +1,8 @@
 public class Box {
 
     //Atribute
-    private int id;
+    private int row;
+    private int colum;
     private TypeTube tubeType;
 
     //Connections
@@ -9,19 +10,24 @@ public class Box {
     private Box prev;
 
     //Constructor
-    public Box(int id, TypeTube tubeType){
-        this.id = id;
+    public Box(int row, int colum, TypeTube tubeType){
+        this.row = row;
+        this.colum = colum;
         this.tubeType = tubeType;
     }
 
     //Getter and Setter
-    public int getId() {
-        return id;
+    public int getRow() {
+        return row;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId(int row) {
+        this.row = row;
     }
+
+    public int getColum() { return colum; }
+
+    public void setColum(int colum) { this.colum = colum; }
 
     public TypeTube getTubeType() {
         return tubeType;
