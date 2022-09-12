@@ -8,7 +8,6 @@ public class Main {
 
 	static Board theBoard = new Board();
 
-
 	public static void main(String[] args) {
 
 		//Menu
@@ -19,6 +18,11 @@ public class Main {
 
 				case 1:
 					System.out.println("Inicia la partida");
+					theBoard.setStartTime(System.currentTimeMillis());
+
+					//Set player
+					System.out.println("Indica el nick que desea usar");
+					String playerName = sc.next();
 
 					//Set board
 					theBoard.createBoard();
@@ -67,17 +71,29 @@ public class Main {
 							boolean validation = theBoard.verifyTubes(row, colum, typeTube);
 							if (validation){
 								System.out.println("La solucion es correcta");
+								theBoard.setEndTime(System.currentTimeMillis());
+								theBoard.registerPlayer(new Player(playerName, theBoard.calculateScore(theBoard.getStartTime(), theBoard.getEndTime(), theBoard.getContTubes())));
 								theBoard.setHead(null);
 								theBoard.setTail(null);
+								theBoard.setEndTime(0);
+								theBoard.setStartTime(0);
+								theBoard.setContTubes(0);
+								theBoard.setContErrors(0);
 								inGame = false;
 							}else{
-								System.out.println("La tuberia no funciona, numero de errores " + theBoard.getContErrores());
+								System.out.println("La tuberia no funciona, numero de errores " + theBoard.getContErrors());
 							}
 						}
 						if (option == 3) {
+							theBoard.setEndTime(System.currentTimeMillis());
+							theBoard.registerPlayer(new Player(playerName, theBoard.calculateScore(theBoard.getStartTime(), theBoard.getEndTime(), theBoard.getContTubes())));
 							inGame = false;
 							theBoard.setHead(null);
 							theBoard.setTail(null);
+							theBoard.setEndTime(0);
+							theBoard.setStartTime(0);
+							theBoard.setContTubes(0);
+							theBoard.setContErrors(0);
 						}
 					}
 					break;

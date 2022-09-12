@@ -7,7 +7,6 @@ public class Box {
 
     //Connections
     private Box next;
-    private Box prev;
 
     //Constructor
     public Box(int row, int colum, TypeTube tubeType){
@@ -43,14 +42,6 @@ public class Box {
 
     public void setNext(Box next) {
         this.next = next;
-    }
-
-    public Box getPrev() {
-        return prev;
-    }
-
-    public void setPrev(Box prev) {
-        this.prev = prev;
     }
 
     public String toString(){

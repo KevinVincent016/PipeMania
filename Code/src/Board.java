@@ -3,15 +3,17 @@ public class Board {
     //Connections
     private Box head;
     private Box tail;
-    private Leaderboard theLeaderboard;
+    private Leaderboard theLeaderboard = new Leaderboard();
 
     //Atributes
-    private int contTubes;
-
     private Box board[][] = new Box[8][8];
 
-    private int contErrores = 0;
+    private int contTubes;
+    private int contErrors = 0;
 
+    private long startTime;
+
+    private long endTime;
     //constructor
     public Board() {
         contTubes = 0;
@@ -50,30 +52,38 @@ public class Board {
         return contTubes;
     }
 
-    public void setContErrores(int contErrores) {
-        this.contErrores = contErrores;
+    public void setContErrors(int contErrors) {
+        this.contErrors = contErrors;
     }
 
-    public int getContErrores() {
-        return contErrores;
+    public int getContErrors() {
+        return contErrors;
+    }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
+    public long getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
     }
 
     //Methods
     private void addLast(Box box) {
         if (head == null) {
             head = box;
-            head.setNext(box);
-            head.setPrev(box);
+            tail = box;
         } else {
-            Box tail = head.getPrev();
-
-            //Enlaces next
             tail.setNext(box);
-            box.setNext(head);
-
-            //Enlaces prev
-            head.setPrev(box);
-            box.setPrev(tail);
+            tail = box;
         }
     }
 
@@ -83,23 +93,6 @@ public class Board {
                 board[i][j] = new Box(i, j, TypeTube.NONE);
             }
         }
-    }
-
-    public Box search(int row, int colum) {
-        return search(row, colum, head);
-    }
-
-    private Box search(int row, int colum, Box current) {
-
-        if (current == null) {
-            return null;
-        }
-
-        if (current.getRow() == row && current.getColum() == colum) {
-            return current;
-        }
-
-        return search(row, colum, current.getNext());
     }
 
     public void printBoard() {
@@ -154,36 +147,36 @@ public class Board {
         if (tubeType == TypeTube.TYPEHORIZONTAL) {
             if (colum == 0) {
                 if (board[row][colum + 1].getTubeType() == TypeTube.TYPEVERTICAL) {
-                    contErrores++;
+                    contErrors++;
                 }
                 if (board[row][colum + 1].getTubeType() == TypeTube.TYPENINETY && board[row][colum + 2].getTubeType() != TypeTube.NONE) {
-                    contErrores++;
+                    contErrors++;
                 }
             } else if (colum == 7) {
                 if (board[row][colum - 1].getTubeType() == TypeTube.TYPEVERTICAL) {
-                    contErrores++;
+                    contErrors++;
                 }
                 if (board[row][colum - 1].getTubeType() == TypeTube.TYPENINETY && board[row][colum - 2].getTubeType() != TypeTube.NONE) {
-                    contErrores++;
+                    contErrors++;
                 }
             } else {
                 if (board[row][colum - 1].getTubeType() == TypeTube.TYPEVERTICAL || board[row][colum + 1].getTubeType() == TypeTube.TYPEVERTICAL) {
-                    contErrores++;
+                    contErrors++;
                 }
             }
 
             if (row == 0) {
                 if (board[row + 1][colum].getTubeType() != TypeTube.NONE) {
-                    contErrores++;
+                    contErrors++;
                 }
             }
             if (row == 7) {
                 if (board[row - 1][colum].getTubeType() != TypeTube.NONE) {
-                    contErrores++;
+                    contErrors++;
                 }
             } else {
                 if (board[row + 1][colum].getTubeType() != TypeTube.NONE || board[row - 1][colum].getTubeType() != TypeTube.NONE) {
-                    contErrores++;
+                    contErrors++;
                 }
             }
 
@@ -194,35 +187,35 @@ public class Board {
         if (tubeType == TypeTube.TYPEVERTICAL) {
             if (colum == 0) {
                 if (board[row][colum + 1].getTubeType() != TypeTube.NONE) {
-                    contErrores++;
+                    contErrors++;
                 }
             } else if (colum == 7) {
                 if (board[row][colum - 1].getTubeType() != TypeTube.NONE) {
-                    contErrores++;
+                    contErrors++;
                 }
             } else {
                 if (board[row][colum - 1].getTubeType() != TypeTube.NONE || board[row][colum + 1].getTubeType() != TypeTube.NONE) {
-                    contErrores++;
+                    contErrors++;
                 }
             }
 
             if (row == 0) {
                 if (board[row + 1][colum].getTubeType() == TypeTube.TYPEHORIZONTAL) {
-                    contErrores++;
+                    contErrors++;
                 }
                 if (board[row + 1][colum].getTubeType() == TypeTube.TYPENINETY && board[row + 2][colum].getTubeType() != TypeTube.NONE) {
-                    contErrores++;
+                    contErrors++;
                 }
             } else if (row == 7) {
                 if (board[row - 1][colum].getTubeType() == TypeTube.TYPEHORIZONTAL) {
-                    contErrores++;
+                    contErrors++;
                 }
                 if (board[row - 1][colum].getTubeType() == TypeTube.TYPENINETY && board[row - 2][colum].getTubeType() != TypeTube.NONE) {
-                    contErrores++;
+                    contErrors++;
                 }
             } else {
                 if (board[row - 1][colum].getTubeType() == TypeTube.TYPEHORIZONTAL || board[row + 1][colum].getTubeType() == TypeTube.TYPEHORIZONTAL) {
-                    contErrores++;
+                    contErrors++;
                 }
             }
 
@@ -233,34 +226,34 @@ public class Board {
         if (tubeType == TypeTube.TYPENINETY) {
             if (colum == 0) {
                 if (board[row][colum + 1].getTubeType() == TypeTube.F || board[row][colum + 1].getTubeType() == TypeTube.D) {
-                    contErrores++;
+                    contErrors++;
                 }
             } else if (colum == 7) {
                 if (board[row][colum - 1].getTubeType() == TypeTube.F || board[row][colum - 1].getTubeType() == TypeTube.D) {
-                    contErrores++;
+                    contErrors++;
                 }
             } else {
                 if (board[row][colum + 1].getTubeType() == TypeTube.F || board[row][colum + 1].getTubeType() == TypeTube.D) {
-                    contErrores++;
+                    contErrors++;
                 }
                 if (board[row][colum - 1].getTubeType() == TypeTube.F || board[row][colum - 1].getTubeType() == TypeTube.D) {
-                    contErrores++;
+                    contErrors++;
                 }
             }
             if (row == 0) {
                 if (board[row + 1][colum].getTubeType() == TypeTube.F || board[row + 1][colum].getTubeType() == TypeTube.D) {
-                    contErrores++;
+                    contErrors++;
                 }
             } else if (row == 7) {
                 if (board[row - 1][colum].getTubeType() == TypeTube.F || board[row - 1][colum].getTubeType() == TypeTube.D) {
-                    contErrores++;
+                    contErrors++;
                 }
             } else {
                 if (board[row + 1][colum].getTubeType() == TypeTube.F || board[row + 1][colum].getTubeType() == TypeTube.D) {
-                    contErrores++;
+                    contErrors++;
                 }
                 if (board[row - 1][colum].getTubeType() == TypeTube.F || board[row - 1][colum].getTubeType() == TypeTube.D) {
-                    contErrores++;
+                    contErrors++;
                 }
             }
 
@@ -269,43 +262,59 @@ public class Board {
         }
     }
 
-    public boolean auxVeifyTubes() {
+    public boolean auxVerifyTubes() {
         return auxVerifyTubes(head);
     }
 
     private boolean auxVerifyTubes(Box current) {
-        if (current == tail) {
-            return true;
-        }
-        if (current.getTubeType() != TypeTube.NONE) {
+        if (current == null) {
             return false;
         }
+
+        if (current.getTubeType() == TypeTube.NONE) {
+            return false;
+        }
+
+        if (current.getTubeType() == TypeTube.D && current == tail){
+            return true;
+        }
+
         return auxVerifyTubes(current.getNext());
     }
 
     public boolean verifyTubes(int lastRow, int lastColum, TypeTube lastTypeTube) {
         if (lastTypeTube == TypeTube.TYPEHORIZONTAL) {
-            if (board[lastRow][lastColum + 1].getTubeType() == TypeTube.D || board[lastRow][lastColum + 1].getTubeType() == TypeTube.NONE) {
+            if (board[lastRow][lastColum + 1].getTubeType() == TypeTube.D) {
                 addLast(board[lastRow][lastColum + 1]);
-            }
-            if (board[lastRow][lastColum - 1].getTubeType() == TypeTube.D || board[lastRow][lastColum - 1].getTubeType() == TypeTube.NONE){
+            }else if (board[lastRow][lastColum - 1].getTubeType() == TypeTube.D){
                 addLast(board[lastRow][lastColum - 1]);
+            }else{
+                System.out.println("La Fuente aun no se conecta con el Drenaje");
             }
         }
 
         if (lastTypeTube == TypeTube.TYPEVERTICAL) {
-            if (board[lastRow + 1][lastColum].getTubeType() == TypeTube.D || board[lastRow + 1][lastColum].getTubeType() == TypeTube.NONE) {
+            if (board[lastRow + 1][lastColum].getTubeType() == TypeTube.D) {
                 addLast(board[lastRow][lastColum + 1]);
-            }
-            if(board[lastRow - 1][lastColum].getTubeType() == TypeTube.D || board[lastRow - 1][lastColum].getTubeType() == TypeTube.NONE){
+            }else if(board[lastRow - 1][lastColum].getTubeType() == TypeTube.D){
                 addLast(board[lastRow][lastColum - 1]);
+            }else{
+                System.out.println("La fuente aun no se conecta con el Drenaje");
             }
         }
 
-        if (!auxVeifyTubes() || contErrores > 0) {
+        if (!auxVerifyTubes() || contErrors > 0) {
             return false;
         } else {
             return true;
         }
+    }
+
+    public int calculateScore(long startTime, long endTime, int contTubes){
+        return (int) (contTubes*100-(60-(endTime-startTime))*10);
+    }
+
+    public void registerPlayer(Player player){
+        theLeaderboard.addScore(player);
     }
 }
