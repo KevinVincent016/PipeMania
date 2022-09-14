@@ -46,24 +46,18 @@ public class Leaderboard {
         }
     }
 
-    int count = 0;
-    public void top10(){
-        top10(root);
+    public void printLeaderboard(){
+        printLeaderboard(root);
     }
 
-    private void top10(Player current){
+    private void printLeaderboard(Player current){
         if(current==null){
             return;
         }
-        if(count==10){
-            count=0;
-            return;
-        }
 
-        top10(current.getRight());
+        printLeaderboard(current.getRight());
         System.out.println(current.toString());
-        count++;
-        top10(current.getLeft());
+        printLeaderboard(current.getLeft());
 
     }
 }

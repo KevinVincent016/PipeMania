@@ -179,7 +179,7 @@ public class Board {
                     contErrors++;
                 }
             }
-
+            contTubes++;
             board[row][colum].setTubeType(tubeType);
             addLast(new Box(row, colum, tubeType));
         }
@@ -218,7 +218,7 @@ public class Board {
                     contErrors++;
                 }
             }
-
+            contTubes++;
             board[row][colum].setTubeType(tubeType);
             addLast(new Box(row, colum, tubeType));
         }
@@ -256,7 +256,7 @@ public class Board {
                     contErrors++;
                 }
             }
-
+            contTubes++;
             board[row][colum].setTubeType(tubeType);
             addLast(new Box(row, colum, tubeType));
         }

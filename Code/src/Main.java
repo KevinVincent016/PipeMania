@@ -47,15 +47,32 @@ public class Main {
 						option = sc.nextInt();
 
 						if (option == 1) {
-							System.out.println("Indica la columna");
-							colum = sc.nextInt();
 							System.out.println("Indica la fila");
 							row = sc.nextInt();
+							while (row>7 || row<0){
+								System.out.println("El rango permitido es de 0-7");
+								System.out.println("Indicar denuevo la fila");
+								row = sc.nextInt();
+							}
+							System.out.println("Indica la columna");
+							colum = sc.nextInt();
+							while (colum>7 || colum<0){
+								System.out.println("El rango permitido es de 0-7");
+								System.out.println("indicar denuevo la columna");
+								colum = sc.nextInt();
+							}
 							System.out.println("Indica el tipo de tuberia");
 							System.out.println("(1) Tuberia horizontal (==)");
 							System.out.println("(2) Tuberia vertical (||)");
 							System.out.println("(3) Tuberia 90 Grados (O)");
 							int aux = sc.nextInt();
+							while (aux<1 || aux>3){
+								System.out.println("Solo se permiten las opciones mostradas, por favor seleccionar denuevo el tipo de tuberia");
+								System.out.println("(1) Tuberia horizontal (==)");
+								System.out.println("(2) Tuberia vertical (||)");
+								System.out.println("(3) Tuberia 90 Grados (O)");
+								aux = sc.nextInt();
+							}
 							if(aux == 1){
 								typeTube = TypeTube.TYPEHORIZONTAL;
 							}
@@ -100,6 +117,7 @@ public class Main {
 
 				case 2:
 					System.out.println("Tablero de puntuaciones");
+					theBoard.getTheLeaderboard().printLeaderboard();
 					break;
 
 				case 3:
@@ -121,10 +139,6 @@ public class Main {
 				"(3) Salir");
 		option = sc.nextInt();
 		return option;
-	}
-
-	public static void verifyTubes(){
-
 	}
 
 }
